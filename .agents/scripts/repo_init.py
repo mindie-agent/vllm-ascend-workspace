@@ -4,17 +4,35 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 
 REPOSITORIES = ("vllm", "vllm-ascend")
 
 
+def _git_bin() -> str:
+    if pinned := os.environ.get("MINDIE_GIT_BIN"):
+        return pinned
+    if found := shutil.which("git"):
+        return found
+    if os.name == "nt":
+        for var, fallback in (("ProgramFiles", r"C:\Program Files"), ("ProgramFiles(x86)", r"C:\Program Files (x86)")):
+            base = Path(os.environ.get(var, fallback)) / "Git"
+            for rel in ("cmd/git.exe", "bin/git.exe"):
+                candidate = base / rel
+                if candidate.is_file():
+                    return str(candidate)
+    return "git"
+
+
 def git(root: Path, *args: str, allowed: tuple[int, ...] = (0,)) -> str:
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "never"}
     result = subprocess.run(
-        ["git", "-C", str(root), *args], text=True, capture_output=True
+        [_git_bin(), "-C", str(root), *args], text=True, capture_output=True, env=env
     )
     if result.stderr:
         print(result.stderr, file=sys.stderr, end="")

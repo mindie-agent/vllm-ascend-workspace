@@ -31,9 +31,12 @@ already verified in the enclosing MindIE Agent installation.
    A stale `GH_TOKEN` or `GITHUB_TOKEN` overrides saved login; repair that
    caller's credential source before retrying login. For fine-grained PATs,
    follow the environment-only reuse flow linked below.
-5. Verify the expected account, run
-   `gh auth setup-git --hostname github.com`, and read the actual source/fork
-   repositories needed by initialization. Reuse saved fork selections; a
+5. Verify the expected account, ensure `git`'s directory is on `PATH`, and on Windows
+   clear any unscoped `helper-selector` in system `etc/gitconfig` (`git config --system --unset-all credential.helper`
+   and `GCM_INTERACTIVE=never`; if Windows `schannel` behind a corporate proxy reports
+   `CRYPT_E_NO_REVOCATION_CHECK`, set `http.sslBackend=schannel` and `http.schannelCheckRevoke=false`
+   with `http.sslVerify=true`), then run `gh auth setup-git --hostname github.com`, and read
+   the actual source/fork repositories needed by initialization. Reuse saved fork selections; a
    different authenticated account does not authorize replacing them.
    `repo_init.py` configures existing forks; it does not create GitHub forks.
    Resolve missing forks within the user's requested setup before claiming
