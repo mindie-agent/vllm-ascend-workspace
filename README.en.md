@@ -43,10 +43,10 @@ flowchart TB
 
 ### Option 1: One-Sentence Setup via Your AI Agent (Recommended)
 
-Paste the following sentence into **Claude Code**, **OpenAI Codex CLI**, **Kimi Code**, or **Cursor**:
+Paste the following sentence into **Claude Code**, **OpenAI Codex CLI**, **Kimi Code**, **DSH**, or **Cursor**:
 
 ```text
-Please initialize this vLLM-Ascend development workspace for me: https://github.com/mindie-agent/vllm-ascend-workspace
+Please initialize this vLLM-Ascend development workspace and add it to my current client: https://github.com/mindie-agent/vllm-ascend-workspace
 ```
 
 <details>
@@ -54,18 +54,25 @@ Please initialize this vLLM-Ascend development workspace for me: https://github.
 
 When the user asks you to set up `vllm-ascend-workspace`, execute the following steps automatically:
 
+0. **Complete GitHub sign-in before repository initialization**:
+   - Follow [GitHub Sign-In](.agents/github-authentication.md): reuse working authentication; otherwise offer browser or token login, preferring tokens on enterprise networks. Use an existing token through the hidden `gh` prompt or guide creation. Let `gh` save credentials for subsequent Git/PR operations.
+   - Reuse an enclosing MindIE Agent installation's verified account and choices. Standalone workspace setup must also run this step; asking for a username does not replace authentication.
 1. **Clone or enter the workspace repository**:
+   Reuse an existing directory; for a new workspace, clone into the user's selected destination:
    ```bash
-   git clone https://github.com/mindie-agent/vllm-ascend-workspace.git
-   cd vllm-ascend-workspace
+   git clone https://github.com/mindie-agent/vllm-ascend-workspace.git "<destination>"
+   cd "<destination>"
    ```
-2. **Detect the user's GitHub username and initialize submodules & fork remotes**:
-   - Check `gh api user -q .login` first; ask the user only if `gh` is unavailable.
-   - Run non-interactive initialization:
+2. **Automatically add the path to the current client**:
+   - Follow [Native Workspace Registration](.agents/harness-workspace.md) to add the selected absolute path through the native project/workspace entry. Reuse an existing record for the same path without a second registration question.
+   - Confirm the path in the client before reporting completion. Deferred or failed source downloads retain the directory and registration for resuming initialization.
+3. **Detect the user's GitHub username and initialize submodules & fork remotes**:
+   - Read the workspace `AGENTS.md` and [script guide](.agents/scripts/README.md), then read the verified account with `gh api --hostname github.com user --jq .login`.
+   - Reuse saved fork selections with `python3 .agents/scripts/repo_init.py --no-input`. For first-time setup using the verified account's existing forks, run:
      ```bash
      python3 .agents/scripts/repo_init.py --github-user <GITHUB_USERNAME> --no-input
      ```
-3. **Create an isolated task worktree on demand when starting a task**:
+4. **Create an isolated task worktree on demand when starting a task**:
    ```bash
    python3 .agents/scripts/workspace.py task-init .worktrees/<task-name> --title "<task-name>"
    python3 .agents/scripts/workspace.py worktree-add vllm-ascend .worktrees/<task-name>/vllm-ascend --ref HEAD --branch feat/<task-name>
@@ -79,6 +86,9 @@ When the user asks you to set up `vllm-ascend-workspace`, execute the following 
 
 #### 1. Initialize Submodules & Configure Your Forks
 
+Complete [GitHub Sign-In](.agents/github-authentication.md) before initialization.
+Reuse working authentication or choose browser/token login; normal setup includes this step.
+
 ```bash
 # Interactive prompt for your GitHub username or fork URLs
 python3 .agents/scripts/repo_init.py
@@ -88,6 +98,8 @@ python3 .agents/scripts/repo_init.py --github-user YOUR_GITHUB_USER --no-input
 ```
 
 Your choices are saved under `forks` in local `workspace.json` and reused automatically on future runs.
+
+Follow [Native Workspace Registration](.agents/harness-workspace.md) to add the workspace root to your current client. Agent-led installation includes this step.
 
 #### 2. Create an Isolated Worktree for a Task
 
