@@ -8,7 +8,7 @@
 2. 需要登录时提供浏览器和 Token 两种方式。用户说明处于企业网络、检测到代理/自定义 CA 或浏览器授权受阻时，优先 Token。网络超时、代理 407 和证书错误先按传输问题处理，保留 TLS 校验。
 3. 浏览器方式执行 `gh auth login --hostname github.com --git-protocol https --web`。Token 方式只询问“已有 Token 还是需要创建”；需要时打开 [Token 创建页](https://github.com/settings/tokens/new?scopes=repo%2Cread%3Aorg%2Cgist&description=MindIE%20Agent)。普通持久登录使用 `gh` 要求的 classic PAT 权限，尊重组织对有效期、SSO 和 Token 类型的要求。
 4. 已有 Token 时，在用户可操作的终端执行 `gh auth login --hostname github.com --git-protocol https`，选择 `Paste an authentication token` 后在隐藏提示中输入。用户已提供私有文件时，直接通过标准输入交给 `gh auth login --hostname github.com --git-protocol https --with-token`。由 `gh` 保存凭据；Token 不进入对话、命令行参数、日志、`workspace.json`、`.vaws-local` 或仓库远端 URL。
-5. 再次核对账号，执行 `gh auth setup-git --hostname github.com`，并只读检查初始化需要的源码仓库和 Fork。保留已保存的 Fork 选择，登录账号变化不自动改写个人远端。`repo_init.py` 配置已有 Fork，不负责在 GitHub 创建 Fork；缺失时按用户请求的初始化范围处理，再报告推送就绪。
+5. 再次核对账号，确保 `git` 所在目录已在 `PATH` 中，在 Windows 下先清除系统级 `etc/gitconfig` 可能预置的无作用域 `helper-selector`（`git config --system --unset-all credential.helper` 及 `GCM_INTERACTIVE=never`；若企业代理下 `schannel` 报 `CRYPT_E_NO_REVOCATION_CHECK`，设置 `http.sslBackend=schannel` 与 `http.schannelCheckRevoke=false` 并保持 `http.sslVerify=true`），再执行 `gh auth setup-git --hostname github.com`，并只读检查初始化需要的源码仓库和 Fork。保留已保存的 Fork 选择，登录账号变化不自动改写个人远端。`repo_init.py` 配置已有 Fork，不负责在 GitHub 创建 Fork；缺失时按用户请求的初始化范围处理，再报告推送就绪。
 
 失效的 `GH_TOKEN` / `GITHUB_TOKEN` 会覆盖已保存的登录，先修正调用方的凭据来源，再重试登录。Fine-grained PAT 按下方共享流程使用环境变量认证。
 
