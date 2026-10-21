@@ -43,10 +43,10 @@ flowchart TB
 
 ### 方式一：一句话让你的 AI Agent 自动初始化（推荐）
 
-直接把下面这句话发给你的 **Claude Code**、**Codex**、**Kimi Code** 或 **Cursor**：
+直接把下面这句话发给你的 **Claude Code**、**Codex**、**Kimi Code**、**DSH** 或 **Cursor**：
 
 ```text
-帮我初始化这个 vLLM-Ascend 开发工作区：https://github.com/mindie-agent/vllm-ascend-workspace
+帮我初始化这个 vLLM-Ascend 开发工作区，并添加到当前客户端工作区：https://github.com/mindie-agent/vllm-ascend-workspace
 ```
 
 <details>
@@ -54,18 +54,25 @@ flowchart TB
 
 当你收到用户要求初始化 `vllm-ascend-workspace` 的指令时，请自动按顺序执行以下步骤：
 
+0. **先完成 GitHub 登录引导，再初始化仓库**：
+   - 执行 [GitHub 登录流程](.agents/github-authentication.zh.md)：已有可用认证直接继续；需要登录时提供浏览器和 Token，企业网络优先 Token。已有 Token 就通过 `gh` 隐藏提示输入，没有则引导创建，凭据由 `gh` 保存并供后续 Git/PR 操作复用。
+   - 从 MindIE Agent 安装流程进入时复用已验证的账号与选择；独立初始化本工作区同样执行此步骤。不能用“询问一个用户名”替代登录验证。
 1. **克隆或进入工作区仓库**：
+   已有目录直接复用；新建时按用户选定的目标路径克隆：
    ```bash
-   git clone https://github.com/mindie-agent/vllm-ascend-workspace.git
-   cd vllm-ascend-workspace
+   git clone https://github.com/mindie-agent/vllm-ascend-workspace.git "<目标路径>"
+   cd "<目标路径>"
    ```
-2. **获取用户的 GitHub 用户名并初始化双仓子模块与 Fork 远端**：
-   - 先尝试通过 `gh api user -q .login` 自动获取当前登录的 GitHub 用户名；若未安装 `gh`，再询问用户。
-   - 执行非交互初始化：
+2. **自动添加到当前客户端工作区**：
+   - 按 [客户端工作区登记](.agents/harness-workspace.zh.md) 把所选绝对路径添加到原生项目/工作区入口。同一路径已存在时复用，不再单独询问是否登记。
+   - 确认客户端实际显示该路径，再报告完成；源码下载暂缓或失败时保留目录及登记，后续继续初始化。
+3. **获取用户的 GitHub 用户名并初始化双仓子模块与 Fork 远端**：
+   - 读取工作区 `AGENTS.md` 和 [脚本说明](.agents/scripts/README.zh.md)，通过 `gh api --hostname github.com user --jq .login` 获取已验证账号。
+   - 已有 `workspace.json` 的 Fork 选择时执行 `python3 .agents/scripts/repo_init.py --no-input`，保留个人远端。首次配置、使用该账号的已有 Fork 时执行：
      ```bash
      python3 .agents/scripts/repo_init.py --github-user <GITHUB_USERNAME> --no-input
      ```
-3. **按用户当前任务按需创建独立 Worktree（如需开始具体任务）**：
+4. **按用户当前任务按需创建独立 Worktree（如需开始具体任务）**：
    ```bash
    python3 .agents/scripts/workspace.py task-init .worktrees/<task-name> --title "<task-name>"
    python3 .agents/scripts/workspace.py worktree-add vllm-ascend .worktrees/<task-name>/vllm-ascend --ref HEAD --branch feat/<task-name>
@@ -79,6 +86,8 @@ flowchart TB
 
 #### 1. 初始化源码并绑定个人 Fork
 
+先完成 [GitHub 登录流程](.agents/github-authentication.zh.md)，再运行初始化命令。已有认证直接复用，未登录时选择浏览器或 Token；正常初始化不跳过此步骤。
+
 ```bash
 # 交互式输入 GitHub 用户名或 Fork 地址
 python3 .agents/scripts/repo_init.py
@@ -88,6 +97,8 @@ python3 .agents/scripts/repo_init.py --github-user YOUR_GITHUB_USER --no-input
 ```
 
 配置会自动保存在本地 `workspace.json` 的 `forks` 字段中，后续重复运行会自动复用。
+
+按 [客户端工作区登记](.agents/harness-workspace.zh.md) 将工作区根目录添加到正在使用的客户端；交由 Agent 安装时，这一步包含在安装流程中。
 
 #### 2. 为新任务创建独立的并行工作树（Worktree）
 

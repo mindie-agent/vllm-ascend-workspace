@@ -6,6 +6,11 @@
 
 ## Repository initialization
 
+During normal setup, first complete [GitHub Sign-In](../github-authentication.md).
+Reuse a working account; otherwise guide browser or enterprise-network token
+creation/input before running the initializer. The script receives repository
+choices, not tokens, and does not log in or create GitHub forks.
+
 Run `python3 .agents/scripts/repo_init.py` from the workspace root. It asks for a GitHub username, or individual fork URLs / `OWNER/REPOSITORY` values. Supply your existing forks. A username or shorthand produces HTTPS URLs; explicit Git URLs are used as supplied.
 
 ```bash

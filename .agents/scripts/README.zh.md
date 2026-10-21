@@ -6,6 +6,8 @@
 
 ## 仓库初始化
 
+正常安装先完成 [GitHub 登录流程](../github-authentication.zh.md)：复用可用账号，或引导浏览器登录、企业网络 Token 创建/输入，再执行初始化脚本。脚本只接收仓库选择，不接收 Token，也不负责登录或在 GitHub 创建 Fork。
+
 在工作区根目录运行 `python3 .agents/scripts/repo_init.py`。脚本会询问 GitHub 用户名，或分别输入两个 fork 的 URL / `OWNER/REPOSITORY`。请提供你已有的 fork。用户名或 `OWNER/REPOSITORY` 简写默认生成 HTTPS 地址；显式传入的 Git URL 按原样使用。
 
 ```bash
