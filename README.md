@@ -9,7 +9,7 @@
 **面向 `vLLM` 与 `vLLM-Ascend` 多任务并行开发的轻量本地工作区脚手架**  
 *A lightweight, multi-worktree local development scaffold for `vLLM` and `vLLM-Ascend` engineering.*
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0)
 [![vLLM](https://img.shields.io/badge/Upstream-vLLM-00A8E8?style=flat-square)](https://github.com/vllm-project/vllm)
 [![vLLM-Ascend](https://img.shields.io/badge/Upstream-vLLM--Ascend-FF6B35?style=flat-square)](https://github.com/vllm-project/vllm-ascend)
 [![MindIE Agent](https://img.shields.io/badge/Ecosystem-MindIE_Agent-6366F1?style=flat-square)](https://github.com/mindie-agent/mindie-agent)
