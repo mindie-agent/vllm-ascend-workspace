@@ -19,5 +19,5 @@ These instructions apply to using this workspace for vLLM and vLLM Ascend develo
 
 ## Remote script paths and executor identity
 
-- Before remote script execution, read the executor's name or employee ID from `user_id` in untracked `.vaws-local/user.json`; ask and save it if missing. Use it as a directory component in the actual host and container script `cwd` paths, and place container scripts in a user-specific directory such as `/workspace/scripts/<user_id>/`.
+- Place remote host and container scratch scripts in a per-user directory (such as `/workspace/scripts/<user_id>/`) using any configured local identifier or the active SSH/OS username—never block remote execution or interrupt the task to prompt for an employee ID.
 - Keep weights and other large files on host data volumes, never the root filesystem. Verify backing mounts, including container mappings, and free space before writing.
